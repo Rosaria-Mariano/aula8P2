@@ -1,7 +1,7 @@
-from django.shortcuts import render
-
+from datetime import date
+from django.shortcuts import get_object_or_404, redirect,render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView,View
 from .models import Todo
 
 
@@ -25,4 +25,12 @@ class TodoDeleteView(DeleteView):
     model = Todo
     success_url = reverse_lazy('todo_list')
 
-# Create your views here.
+class TodoCompleteView(View):
+        def get(self, request, pk):
+            todo = get_object_or_404(Todo, pk=pk)
+            todo.finished_at = date.today()
+            todo.save()
+            return redirect("todo_list")
+
+
+
